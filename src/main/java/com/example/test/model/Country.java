@@ -11,17 +11,13 @@ public class Country {
     private Long id;
 
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "city_id",referencedColumnName = "id")
-    private City city;
 
     public Country() {
     }
 
-    public Country(Long id, String name, City city) {
+    public Country(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.city = city;
     }
 
     public Long getId() {
@@ -40,11 +36,4 @@ public class Country {
         this.name = name;
     }
 
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
 }

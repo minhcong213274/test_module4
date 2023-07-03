@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<a href="/create-city">Create new city</a>
+<h1>Cities</h1>
+<form action="/search-city" method="post">
+  Search by  name:
+  <input name="search" type="text"/>
+  <input type="submit" value="Search"/>
+</form>
+<br/>
+<table border="1">
+  <tr>
+    <th>city name</th>
+    <th> area</th>
+    <th> population</th>
+    <th> description</th>
+    <th>country</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+  <th:block th:each="city : ${cities}">
+    <tr>
+      <td th:text="${city.name}"></td>
+      <td th:text="${city.area}"></td>
+      <td th:text="${city.population}"></td>
+      <td th:text="${city.description}"></td>
+      <td th:if="${city.country}" th:text="${city.country.name}"></td>
+      <td th:unless="${city.country}"></td>
+      <td><a th:href="@{/edit-city/__${city.id}__ }">Edit</a></td>
+      <td><a th:href="@{/delete-city/__${city.id}__ }">Delete</a></td>
+    </tr>
+  </th:block>
+</table>
+</body>
+</html>

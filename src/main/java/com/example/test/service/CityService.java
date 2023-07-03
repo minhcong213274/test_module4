@@ -1,6 +1,7 @@
 package com.example.test.service;
 
 import com.example.test.model.City;
+import com.example.test.model.Country;
 import com.example.test.repository.ICityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,15 @@ public class CityService implements ICityService {
     @Override
     public void remove(Long id) {
         iCityRepository.deleteById(id);
+    }
+
+    @Override
+    public Iterable<City> findAllByCountry(Country country) {
+        return iCityRepository.findAllByCountry(country);
+    }
+
+    @Override
+    public Iterable<City> findAllByNameContaining(String name) {
+        return iCityRepository.findAllByNameContaining(name);
     }
 }

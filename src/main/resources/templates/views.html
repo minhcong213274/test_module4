@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>City</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>List City</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="ajax.js"></script>
 </head>
 <body>
 <form id="add-city">
@@ -26,14 +28,15 @@
     <tr>
       <td>Country:</td>
       <td>
-        <div id="myCountry">
-        </div>
+        <select id="country">
+        </select>
       </td>
     </tr>
     <input type="hidden" id="idItem">
     <tr>
       <td></td>
       <td><input type="button" value="Add" onclick="addNewCity()"></td>
+      <td><input type="button" value="update" id="edit_button" onclick="postEdit()"></td>
     </tr>
   </table>
 </form>

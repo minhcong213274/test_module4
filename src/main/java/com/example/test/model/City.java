@@ -12,17 +12,29 @@ public class City {
     private String name;
     private int area;
     private int population;
-    private int description;
+    private String description;
+    @ManyToOne
+    @JoinColumn(name = "country_id",referencedColumnName = "id")
+    private Country country;
 
     public City() {
     }
 
-    public City(Long id, String name, int area, int population, int description) {
+    public City(Long id, String name, int area, int population, String description, Country country) {
         this.id = id;
         this.name = name;
         this.area = area;
         this.population = population;
         this.description = description;
+        this.country = country;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     public Long getId() {
@@ -57,11 +69,11 @@ public class City {
         this.population = population;
     }
 
-    public int getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(int description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete city</title>
+</head>
+<body>
+<h1>Delete city</h1>
+<h2>Are you sure?</h2>
+<p>
+  <a href="/cities">City list</a>
+</p>
+<form th:action="@{/delete-city}" th:object="${city}" method="post">
+  <input th:type="hidden" name="id" th:field="*{id}">
+  <table>
+    <tr>
+      <td>city name:</td>
+      <td th:text="${city.name}"></td>
+    </tr>
+    <tr>
+      <td>area:</td>
+      <td th:text="${city.area}"></td>
+    </tr>
+    <tr>
+      <td>population:</td>
+      <td th:text="${city.population}"></td>
+    </tr>
+    <tr>
+      <td> description:</td>
+      <td th:text="${city.description}"></td>
+    </tr>
+    <tr>
+      <td> country:</td>
+      <td th:text="${city.country}"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" value="Delete city"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>

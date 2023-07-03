@@ -5,57 +5,98 @@ import com.example.test.model.Country;
 import com.example.test.service.ICityService;
 import com.example.test.service.ICountryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
+@RestController
 
-@RestController("/country")
-@CrossOrigin("*")
 public class CountryController {
     @Autowired
-    private ICountryService iCountryService;
-    @Autowired
     private ICityService iCityService;
-    @GetMapping
-    public ResponseEntity<Iterable<City>> getCities() {
-        return new  ResponseEntity<>(iCityService.findAll(), HttpStatus.OK);
-    }
-    @GetMapping("/list")
-    public ResponseEntity<Iterable<Country>> allCountry() {
-        return new ResponseEntity<>(iCountryService.findAll(), HttpStatus.OK);
+
+    @Autowired
+    private ICountryService iCountryService;
+    @GetMapping("/countries")
+    public ModelAndView listCountry() {
+        Iterable<Country> countries = iCountryService.findAll();
+        ModelAndView modelAndView = new ModelAndView("/country/list");
+        modelAndView.addObject("countries", countries);
+        return modelAndView;
     }
 
-    @PostMapping
-    public ResponseEntity<Country> createCountry(@RequestBody Country country) {
-        return new ResponseEntity<>(iCountryService.save(country), HttpStatus.CREATED);
+    @GetMapping("/create-country")
+    public ModelAndView showCreateForm() {
+        ModelAndView modelAndView = new ModelAndView("/country/create");
+        modelAndView.addObject("country", new Country());
+        return modelAndView;
     }
-    @DeleteMapping("/{id}")
-    public void deleteCountry(@PathVariable Long id) {
-        iCountryService.remove(id);
+
+    @PostMapping("/create-country")
+    public ModelAndView saveCountry(@ModelAttribute("country") Country country) {
+        iCountryService.save(country);
+
+        ModelAndView modelAndView = new ModelAndView("/country/create");
+        modelAndView.addObject("country", new Country());
+        modelAndView.addObject("message", "New country created successfully");
+        return modelAndView;
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<Country> getCountryById(@PathVariable Long id) {
-        Optional<Country> countryOptional = iCountryService.findById(id);
-        if (!countryOptional.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    @GetMapping("/edit-country/{id}")
+    public ModelAndView showEditForm(@PathVariable Long id) {
+        Optional<Country> country = iCountryService.findById(id);
+        if (country.isPresent()) {
+            ModelAndView modelAndView = new ModelAndView("/country/edit");
+            modelAndView.addObject("country", country.get());
+            return modelAndView;
+
+        } else {
+            ModelAndView modelAndView = new ModelAndView("/error.404");
+            return modelAndView;
         }
-        return new ResponseEntity<>(countryOptional.get(), HttpStatus.OK);
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<Country> updateCountry(@PathVariable Long id, @RequestBody Country country) {
-        Optional<Country> countryOptional = iCountryService.findById(id);
-        if (!countryOptional.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    @PostMapping("/edit-country")
+    public ModelAndView updateCountry(@ModelAttribute("country") Country country) {
+        iCountryService.save(country);
+        ModelAndView modelAndView = new ModelAndView("/country/edit");
+        modelAndView.addObject("country", country);
+        modelAndView.addObject("message", "country updated successfully");
+        return modelAndView;
+    }
+
+    @GetMapping("/delete-country/{id}")
+    public ModelAndView showDeleteForm(@PathVariable Long id) {
+        Optional<Country> country = iCountryService.findById(id);
+        if (country.isPresent()) {
+            ModelAndView modelAndView = new ModelAndView("/country/delete");
+            modelAndView.addObject("country", country.get());
+            return modelAndView;
+
+        } else {
+            ModelAndView modelAndView = new ModelAndView("/error.404");
+            return modelAndView;
         }
-        country.setId(id);
-        return new ResponseEntity<>(iCountryService.save(country), HttpStatus.OK);
     }
 
+    @PostMapping("/delete-country")
+    public String deleteCountry(@ModelAttribute("country") Country country) {
+        iCountryService.remove(country.getId());
+        return "redirect:countries";
+    }
 
-    @ModelAttribute("city")
-    public Iterable<City> cities(){
-        return iCityService.findAll();
+    @GetMapping("/view-country/{id}")
+    public ModelAndView viewCountry(@PathVariable("id") Long id){
+        Optional<Country> countryOptional = iCountryService.findById(id);
+        if(!countryOptional.isPresent()){
+            return new ModelAndView("/error.404");
+        }
+
+        Iterable<City> cities = iCityService.findAllByCountry(countryOptional.get());
+
+        ModelAndView modelAndView = new ModelAndView("/country/view");
+        modelAndView.addObject("country", countryOptional.get());
+        modelAndView.addObject("cities", cities);
+        return modelAndView;
     }
 }

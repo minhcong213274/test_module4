@@ -1,29 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Country</title>
+  <meta charset="UTF-8">
+  <title>View Country</title>
 </head>
 <body>
-<form id="add-country">
-  <table>
+<h1>View Country: <span th:text="${country.name}"></span></h1>
+<a href="/countries">Country list</a>
+<table border="1">
+  <tr>
+    <th>City name</th>
+    <th>area</th>
+    <th>population</th>
+  </tr>
+  <th:block th:each="city : ${cities}">
     <tr>
-      <td>Name:</td>
-      <td><input type="text" id="name" placeholder="name"></td>
+      <td th:text="${city.name}"></td>
+      <td th:text="${city.area}"></td>
+      <td th:text="${city.population}"></td>
+      <td th:text="${city.description}"></td>
     </tr>
-    <tr>
-        <div id="form-group">
-        </div>
-    </tr>
-    <input type="hidden" id="idItem">
-    <tr>
-      <td></td>
-      <td><input type="button" value="Add" onclick="addNewCountry()"></td>
-    </tr>
-  </table>
-</form>
-<h1>Country List</h1>
-<div id="countryList">
-</div>
+  </th:block>
+</table>
 </body>
 </html>
